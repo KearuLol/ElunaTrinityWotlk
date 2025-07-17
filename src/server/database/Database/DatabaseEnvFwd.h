@@ -30,6 +30,7 @@ using QueryResult = std::shared_ptr<ResultSet>;
 using QueryResultFuture = std::future<QueryResult>;
 using QueryResultPromise = std::promise<QueryResult>;
 
+class CustomDatabaseConnection;
 class CharacterDatabaseConnection;
 class LoginDatabaseConnection;
 class WorldDatabaseConnection;
@@ -39,6 +40,7 @@ class PreparedStatementBase;
 template<typename T>
 class PreparedStatement;
 
+using CustomDatabasePreparedStatement = PreparedStatement<CustomDatabaseConnection>;
 using CharacterDatabasePreparedStatement = PreparedStatement<CharacterDatabaseConnection>;
 using LoginDatabasePreparedStatement = PreparedStatement<LoginDatabaseConnection>;
 using WorldDatabasePreparedStatement = PreparedStatement<WorldDatabaseConnection>;
@@ -67,6 +69,7 @@ bool InvokeAsyncCallbackIfReady(TransactionCallback& callback);
 template<typename T>
 using SQLTransaction = std::shared_ptr<Transaction<T>>;
 
+using CustomDatabaseTransaction = SQLTransaction<CustomDatabaseConnection>;
 using CharacterDatabaseTransaction = SQLTransaction<CharacterDatabaseConnection>;
 using LoginDatabaseTransaction = SQLTransaction<LoginDatabaseConnection>;
 using WorldDatabaseTransaction = SQLTransaction<WorldDatabaseConnection>;
@@ -78,6 +81,7 @@ using QueryResultHolderPromise = std::promise<void>;
 template<typename T>
 class SQLQueryHolder;
 
+using CustomDatabaseQueryHolder = SQLQueryHolder<CustomDatabaseConnection>;
 using CharacterDatabaseQueryHolder = SQLQueryHolder<CharacterDatabaseConnection>;
 using LoginDatabaseQueryHolder = SQLQueryHolder<LoginDatabaseConnection>;
 using WorldDatabaseQueryHolder = SQLQueryHolder<WorldDatabaseConnection>;

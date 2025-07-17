@@ -1272,3 +1272,22 @@ std::string Item::GetDebugInfo() const
         << " BagSlot: " << std::to_string(GetBagSlot()) << " Slot: " << std::to_string(GetSlot()) << " Equipped: " << IsEquipped();
     return sstr.str();
 }
+
+std::string Item::GetItemLink()     // Custom Update - Item Link to Chat
+{
+    std::ostringstream ssEnchants;
+
+    for (uint8 i = 0; i <= BONUS_ENCHANTMENT_SLOT; ++i)
+    {
+        if (i == TEMP_ENCHANTMENT_SLOT)
+            continue;
+
+        ssEnchants << ":" << GetEnchantmentId(EnchantmentSlot(i));
+    }
+
+    ssEnchants << ":" << GetItemRandomPropertyId() << ":" << GetItemSuffixFactor() << ":" << (uint32)GetOwner()->GetLevel();
+
+    std::ostringstream ItemLink;
+    ItemLink << "|c" << std::hex << ItemQualityColors[GetTemplate()->Quality] << std::dec << "|Hitem:" << GetEntry() << ssEnchants.str() << "|h[" << GetTemplate()->Name1 << "]|h|r";
+    return ItemLink.str();
+}

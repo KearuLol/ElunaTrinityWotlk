@@ -19,6 +19,7 @@
 #include "AdhocStatement.h"
 #include "Common.h"
 #include "Errors.h"
+#include "Implementation/CustomDatabase.h"
 #include "Implementation/LoginDatabase.h"
 #include "Implementation/WorldDatabase.h"
 #include "Implementation/CharacterDatabase.h"
@@ -530,6 +531,7 @@ void DatabaseWorkerPool<T>::ExecuteOrAppend(SQLTransaction<T>& trans, PreparedSt
         trans->Append(stmt);
 }
 
+template class TC_DATABASE_API DatabaseWorkerPool<CustomDatabaseConnection>;
 template class TC_DATABASE_API DatabaseWorkerPool<LoginDatabaseConnection>;
 template class TC_DATABASE_API DatabaseWorkerPool<WorldDatabaseConnection>;
 template class TC_DATABASE_API DatabaseWorkerPool<CharacterDatabaseConnection>;

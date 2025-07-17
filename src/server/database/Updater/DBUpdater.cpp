@@ -64,6 +64,33 @@ std::string& DBUpdaterUtil::corrected_path()
     return path;
 }
 
+// Custom Database
+template<>
+std::string DBUpdater<CustomDatabaseConnection>::GetConfigEntry()
+{
+    return "Updates.Custom";
+}
+
+template<>
+std::string DBUpdater<CustomDatabaseConnection>::GetTableName()
+{
+    return "Custom";
+}
+
+template<>
+std::string DBUpdater<CustomDatabaseConnection>::GetBaseFile()
+{
+    return BuiltInConfig::GetSourceDirectory() +
+        "/sql/base/custom_database.sql";
+}
+
+template<>
+bool DBUpdater<CustomDatabaseConnection>::IsEnabled(uint32 const updateMask)
+{
+    // This way silences warnings under msvc
+    return (updateMask & DatabaseLoader::DATABASE_CUSTOM) ? true : false;
+}
+
 // Auth Database
 template<>
 std::string DBUpdater<LoginDatabaseConnection>::GetConfigEntry()
@@ -407,6 +434,7 @@ void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, std::string const& hos
     }
 }
 
+template class TC_DATABASE_API DBUpdater<CustomDatabaseConnection>;
 template class TC_DATABASE_API DBUpdater<LoginDatabaseConnection>;
 template class TC_DATABASE_API DBUpdater<WorldDatabaseConnection>;
 template class TC_DATABASE_API DBUpdater<CharacterDatabaseConnection>;

@@ -299,6 +299,7 @@ extern int main(int argc, char** argv)
     sMetric->Initialize(realm.Name, *ioContext, []()
     {
         TC_METRIC_VALUE("online_players", sWorld->GetPlayerCount());
+        TC_METRIC_VALUE("db_queue_custom", uint64(CustomDatabase.QueueSize()));
         TC_METRIC_VALUE("db_queue_login", uint64(LoginDatabase.QueueSize()));
         TC_METRIC_VALUE("db_queue_character", uint64(CharacterDatabase.QueueSize()));
         TC_METRIC_VALUE("db_queue_world", uint64(WorldDatabase.QueueSize()));
@@ -505,6 +506,7 @@ void WorldUpdateLoop()
     if (!halfMaxCoreStuckTime)
         halfMaxCoreStuckTime = std::numeric_limits<uint32>::max();
 
+    CustomDatabase.WarnAboutSyncQueries(true);
     LoginDatabase.WarnAboutSyncQueries(true);
     CharacterDatabase.WarnAboutSyncQueries(true);
     WorldDatabase.WarnAboutSyncQueries(true);
@@ -538,6 +540,7 @@ void WorldUpdateLoop()
 #endif
     }
 
+    CustomDatabase.WarnAboutSyncQueries(false);
     LoginDatabase.WarnAboutSyncQueries(false);
     CharacterDatabase.WarnAboutSyncQueries(false);
     WorldDatabase.WarnAboutSyncQueries(false);
@@ -655,6 +658,7 @@ bool StartDB()
     // Load databases
     DatabaseLoader loader("server.worldserver", DatabaseLoader::DATABASE_NONE);
     loader
+        .AddDatabase(CustomDatabase, "Custom")
         .AddDatabase(LoginDatabase, "Login")
         .AddDatabase(CharacterDatabase, "Character")
         .AddDatabase(WorldDatabase, "World");
@@ -686,6 +690,7 @@ bool StartDB()
 
 void StopDB()
 {
+    CustomDatabase.Close();
     CharacterDatabase.Close();
     WorldDatabase.Close();
     LoginDatabase.Close();
