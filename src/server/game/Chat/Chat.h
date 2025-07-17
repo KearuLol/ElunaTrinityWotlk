@@ -83,6 +83,17 @@ class TC_GAME_API ChatHandler
             return fmt::sprintf(GetTrinityString(entry), std::forward<Args>(args)...);
         }
 
+        template<typename... Args>
+        void SendNotify(const char* fmt, Args &&... args)
+        {
+            std::string str = fmt::sprintf(fmt, std::forward<Args>(args)...);
+
+            WorldPacket data(SMSG_NOTIFICATION, (str.size() + 1));
+            data << str;
+
+            GetSession()->SendPacket(&data);
+        }
+
         bool _ParseCommands(std::string_view text);
         virtual bool ParseCommands(std::string_view text);
 
